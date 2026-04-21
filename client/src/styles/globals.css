@@ -1,0 +1,404 @@
+@import "tailwindcss";
+
+/* ── Design Tokens ───────────────────────────────────────────────────────── */
+:root {
+  /* Typography */
+  --font-sans:    'Geist',    sans-serif;
+  --font-mono:    'DM Mono',  monospace;
+  --font-display: 'Syne',     sans-serif;
+
+  /* Colors — dark-first */
+  --color-background: #080808;
+  --color-surface:    #0f0f0f;
+  --color-surface-2:  #161616;
+  --color-border:     #1f1f1f;
+  --color-border-2:   #2a2a2a;
+  --color-muted:      #3f3f3f;
+  --color-subtle:     #6b6b6b;
+  --color-secondary:  #a1a1aa;
+  --color-foreground: #f4f4f5;
+  --color-accent:     #f4f4f5;
+
+  /* Spacing rhythm */
+  --space-unit: 4px;
+
+  /* Transitions */
+  --duration-fast:   120ms;
+  --duration-base:   200ms;
+  --duration-slow:   400ms;
+  --ease-out:        cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring:     cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ── Base reset ──────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  color-scheme: dark;
+  -webkit-font-smoothing:  antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-background);
+  color:            var(--color-foreground);
+  font-family:      var(--font-sans);
+  font-size:        0.9375rem;
+  line-height:      1.6;
+  min-height:       100dvh;
+}
+
+/* ── Selection ───────────────────────────────────────────────────────────── */
+::selection {
+  background-color: #f4f4f520;
+  color: #f4f4f5;
+}
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 3px; height: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border-2); border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-muted); }
+
+/* ── Focus ───────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline:        1px solid var(--color-border-2);
+  outline-offset: 3px;
+  border-radius:  3px;
+}
+
+/* ── Typography scale ────────────────────────────────────────────────────── */
+h1, h2, h3, h4, h5, h6 {
+  font-family:    var(--font-display);
+  font-weight:    700;
+  letter-spacing: -0.03em;
+  line-height:    1.1;
+  color:          var(--color-foreground);
+}
+
+h1 { font-size: clamp(2.5rem, 6vw, 5rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 1.875rem); }
+h4 { font-size: 1.25rem; }
+h5 { font-size: 1.0625rem; }
+h6 { font-size: 0.875rem; letter-spacing: 0.04em; text-transform: uppercase; }
+
+p   { color: var(--color-secondary); max-width: 68ch; }
+a   { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+code, kbd, pre {
+  font-family: var(--font-mono);
+  font-size:   0.875em;
+}
+
+/* ── Utility classes ─────────────────────────────────────────────────────── */
+.text-display   { font-family: var(--font-display); }
+.text-mono      { font-family: var(--font-mono); }
+.text-muted     { color: var(--color-secondary); }
+.text-subtle    { color: var(--color-subtle); }
+
+.surface        { background: var(--color-surface); }
+.surface-2      { background: var(--color-surface-2); }
+
+.border-subtle  { border: 1px solid var(--color-border); }
+.border-default { border: 1px solid var(--color-border-2); }
+
+/* ── Noise texture overlay ───────────────────────────────────────────────── */
+.noise::before {
+  content:  '';
+  position: fixed;
+  inset:    0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+  background-size: 256px 256px;
+  opacity:  0.018;
+  pointer-events: none;
+  z-index:  9999;
+}
+
+/* ── Scanline effect (subtle) ────────────────────────────────────────────── */
+.scanlines::after {
+  content:  '';
+  position: fixed;
+  inset:    0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events: none;
+  z-index: 9998;
+}
+
+/* ── Grid background ─────────────────────────────────────────────────────── */
+.bg-grid {
+  background-image:
+    linear-gradient(var(--color-border) 1px, transparent 1px),
+    linear-gradient(90deg, var(--color-border) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+
+.bg-grid-fade {
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+  mask-image:         radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+/* ── Glow effects ────────────────────────────────────────────────────────── */
+.glow-sm  { box-shadow: 0 0 12px rgba(244,244,245,0.04); }
+.glow-md  { box-shadow: 0 0 24px rgba(244,244,245,0.06); }
+.glow-lg  { box-shadow: 0 0 48px rgba(244,244,245,0.08); }
+
+/* ── Reveal animation util ───────────────────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity  var(--duration-slow) var(--ease-out),
+    transform var(--duration-slow) var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Stagger delays ──────────────────────────────────────────────────────── */
+.delay-1 { transition-delay: 80ms; }
+.delay-2 { transition-delay: 160ms; }
+.delay-3 { transition-delay: 240ms; }
+.delay-4 { transition-delay: 320ms; }
+.delay-5 { transition-delay: 400ms; }
+
+/* ── Card base ───────────────────────────────────────────────────────────── */
+.card {
+  background:   var(--color-surface);
+  border:       1px solid var(--color-border);
+  border-radius: 6px;
+  transition:
+    border-color var(--duration-base) var(--ease-out),
+    background   var(--duration-base) var(--ease-out);
+}
+.card:hover {
+  border-color: var(--color-border-2);
+  background:   var(--color-surface-2);
+}
+
+/* ── Tag / badge ─────────────────────────────────────────────────────────── */
+.tag {
+  display:       inline-flex;
+  align-items:   center;
+  gap:           4px;
+  padding:       2px 8px;
+  border:        1px solid var(--color-border);
+  border-radius: 3px;
+  font-size:     0.6875rem;
+  font-family:   var(--font-mono);
+  letter-spacing:0.04em;
+  color:         var(--color-subtle);
+  text-transform:uppercase;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────────────── */
+.divider {
+  height:           1px;
+  background-color: var(--color-border);
+  width:            100%;
+}
+
+/* ── Input base ──────────────────────────────────────────────────────────── */
+.input-base {
+  width:        100%;
+  background:   var(--color-surface);
+  border:       1px solid var(--color-border);
+  border-radius:4px;
+  padding:      10px 14px;
+  font-family:  var(--font-sans);
+  font-size:    0.9375rem;
+  color:        var(--color-foreground);
+  outline:      none;
+  transition:   border-color var(--duration-fast) var(--ease-out);
+}
+.input-base::placeholder { color: var(--color-muted); }
+.input-base:hover  { border-color: var(--color-border-2); }
+.input-base:focus  { border-color: var(--color-subtle); }
+
+/* ── Button base ─────────────────────────────────────────────────────────── */
+.btn {
+  display:       inline-flex;
+  align-items:   center;
+  justify-content: center;
+  gap:           8px;
+  padding:       9px 18px;
+  font-family:   var(--font-sans);
+  font-size:     0.9375rem;
+  font-weight:   500;
+  border-radius: 4px;
+  border:        1px solid transparent;
+  cursor:        pointer;
+  transition:
+    background   var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color        var(--duration-fast) var(--ease-out),
+    transform    var(--duration-fast) var(--ease-out),
+    opacity      var(--duration-fast) var(--ease-out);
+  user-select: none;
+  white-space: nowrap;
+}
+.btn:active          { transform: scale(0.98); }
+.btn:disabled        { opacity: 0.4; pointer-events: none; }
+
+.btn-primary {
+  background:   var(--color-foreground);
+  color:        var(--color-background);
+  border-color: var(--color-foreground);
+}
+.btn-primary:hover {
+  background:   #ffffff;
+  border-color: #ffffff;
+}
+
+.btn-ghost {
+  background:   transparent;
+  color:        var(--color-secondary);
+  border-color: var(--color-border);
+}
+.btn-ghost:hover {
+  background:   var(--color-surface);
+  color:        var(--color-foreground);
+  border-color: var(--color-border-2);
+}
+
+.btn-sm {
+  padding:   6px 12px;
+  font-size: 0.8125rem;
+}
+
+.btn-lg {
+  padding:   12px 28px;
+  font-size: 1.0625rem;
+}
+
+/* ── Stat number style ───────────────────────────────────────────────────── */
+.stat-value {
+  font-family:    var(--font-display);
+  font-size:      2rem;
+  font-weight:    700;
+  letter-spacing: -0.04em;
+  color:          var(--color-foreground);
+  line-height:    1;
+}
+
+.stat-label {
+  font-family:    var(--font-mono);
+  font-size:      0.6875rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:          var(--color-subtle);
+}
+
+/* Append to existing globals.css */
+
+/* ── Command palette open — prevent body scroll ───────────────────────────── */
+body.cmd-open { overflow: hidden; }
+
+/* ── Focus ring override for keyboard nav ────────────────────────────────── */
+.focus-ring:focus-visible {
+  outline: 1.5px solid var(--color-border-2);
+  outline-offset: 3px;
+}
+
+/* ── Custom scrollbar — ultra thin ──────────────────────────────────────────*/
+.scrollbar-none::-webkit-scrollbar { display: none; }
+.scrollbar-none { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ── Hover underline link ────────────────────────────────────────────────── */
+.link-hover {
+  position: relative;
+  display: inline-block;
+}
+.link-hover::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--color-foreground);
+  transition: width var(--duration-base) var(--ease-out);
+}
+.link-hover:hover::after { width: 100%; }
+
+/* ── Typewriter cursor ────────────────────────────────────────────────────── */
+.cursor-blink::after {
+  content: '|';
+  animation: blink 1s step-end infinite;
+  color: var(--color-subtle);
+  margin-left: 1px;
+}
+@keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* ── Shimmer loading effect ──────────────────────────────────────────────── */
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface)    25%,
+    var(--color-surface-2)  50%,
+    var(--color-surface)    75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Number transition ───────────────────────────────────────────────────── */
+.number-transition {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* ── Elevated card (used for modals, popovers) ───────────────────────────── */
+.card-elevated {
+  background:   var(--color-surface);
+  border:       1px solid var(--color-border-2);
+  border-radius: 8px;
+  box-shadow:   0 8px 32px rgba(0,0,0,0.5), 0 2px 8px rgba(0,0,0,0.3);
+}
+
+/* ── Text gradient ───────────────────────────────────────────────────────── */
+.text-gradient {
+  background: linear-gradient(135deg, #ffffff 0%, #a1a1aa 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── Selection highlight ─────────────────────────────────────────────────── */
+::selection {
+  background-color: rgba(244,244,245,0.15);
+  color: #ffffff;
+}
+
+/* ── Reduced motion ──────────────────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration:   0.01ms !important;
+    transition-duration:  0.01ms !important;
+  }
+  .reveal { opacity: 1; transform: none; }
+}
+
+/* ── Print ────────────────────────────────────────────────────────────────── */
+@media print {
+  .no-print { display: none !important; }
+  body { background: white; color: black; }
+}

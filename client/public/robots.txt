@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Allow: /games/
+Disallow: /dashboard
+Disallow: /profile/
+Disallow: /api/
+Disallow: /auth/
+
+Sitemap: https://questlog.gg/sitemap.xml

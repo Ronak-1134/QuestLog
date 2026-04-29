@@ -1,7 +1,7 @@
-import { initializeApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, GithubAuthProvider } from 'firebase/auth';
+import { initializeApp }   from 'firebase/app';
+import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 
-const firebaseConfig = {
+const cfg = {
   apiKey:            import.meta.env.VITE_FIREBASE_API_KEY,
   authDomain:        import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
   projectId:         import.meta.env.VITE_FIREBASE_PROJECT_ID,
@@ -10,26 +10,20 @@ const firebaseConfig = {
   appId:             import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-// Only initialize Firebase if real credentials exist
-const hasRealConfig = firebaseConfig.apiKey &&
-  firebaseConfig.apiKey !== 'placeholder' &&
-  firebaseConfig.apiKey.startsWith('AIza');
+const isReal = cfg.apiKey && cfg.apiKey !== 'placeholder' && cfg.apiKey.startsWith('AIza');
 
-let app, auth, googleProvider, githubProvider;
+let app, auth, googleProvider;
 
-if (hasRealConfig) {
-  app            = initializeApp(firebaseConfig);
+if (isReal) {
+  app            = initializeApp(cfg);
   auth           = getAuth(app);
   googleProvider = new GoogleAuthProvider();
-  githubProvider = new GithubAuthProvider();
   googleProvider.setCustomParameters({ prompt: 'select_account' });
 } else {
-  console.warn('Firebase not configured — auth disabled. Add real keys to client/.env');
-  // Export dummy objects so imports dont crash
+  console.warn('[QuestLog] Firebase not configured — add real keys to client/.env');
   auth           = null;
   googleProvider = null;
-  githubProvider = null;
 }
 
-export { auth, googleProvider, githubProvider };
+export { auth, googleProvider };
 export default app;

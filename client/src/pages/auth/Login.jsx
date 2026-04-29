@@ -5,29 +5,34 @@ import { Github }       from 'lucide-react';
 import { useAuth }      from '@/hooks/useAuth.js';
 import { Input }        from '@/components/ui/Input.jsx';
 import { Button }       from '@/components/ui/Button.jsx';
-import { slideUp, staggerContainer, staggerItem } from '@/lib/motion.js';
+import { useAuthStore } from '@/store/auth.store.js';
+import { staggerContainer, staggerItem, slideUp } from '@/lib/motion.js';
 
 export default function Login() {
   const { loginEmail, loginGoogle, loginGithub } = useAuth();
+  const { isLoading } = useAuthStore();
   const [form, setForm]     = useState({ email: '', password: '' });
   const [error, setError]   = useState('');
-  const [loading, setLoading] = useState({ email: false, google: false, github: false });
+  const [loading, setLoading] = useState({ email: false, google: false });
 
   const set = (k) => (e) => setForm((p) => ({ ...p, [k]: e.target.value }));
 
   const attempt = async (key, fn) => {
-    setError('');
-    setLoading((p) => ({ ...p, [key]: true }));
-    try   { await fn(); }
-    catch (err) { setError(err.message); }
-    finally { setLoading((p) => ({ ...p, [key]: false })); }
+  setError('');
+  setLoading((p) => ({ ...p, [key]: true }));
+  try {
+    await fn();
+  } catch (err) {
+    setError(err.message);
+    setLoading((p) => ({ ...p, [key]: false }));
+    }
   };
 
   return (
     <div className="min-h-dvh flex items-center justify-center
                     bg-background noise px-5">
-      {/* Grid bg */}
-      <div className="fixed inset-0 bg-grid bg-grid-fade opacity-30 pointer-events-none" />
+      <div className="fixed inset-0 bg-grid bg-grid-fade
+                      opacity-30 pointer-events-none" />
 
       <motion.div
         variants={staggerContainer(0.07, 0.05)}
@@ -38,16 +43,17 @@ export default function Login() {
         {/* Logo */}
         <motion.div variants={staggerItem} className="mb-10 text-center">
           <Link to="/" className="inline-flex items-center gap-2.5">
-            <span className="w-7 h-7 rounded bg-foreground flex items-center
-                             justify-center text-background font-display
-                             font-bold text-xs">Q</span>
+            <span className="w-7 h-7 rounded bg-foreground
+                             flex items-center justify-center
+                             text-background font-display font-bold text-xs">
+              Q
+            </span>
             <span className="font-display font-bold text-lg tracking-tight">
               QuestLog
             </span>
           </Link>
         </motion.div>
 
-        {/* Heading */}
         <motion.div variants={staggerItem} className="mb-8 text-center">
           <h3 className="text-foreground mb-1">Welcome back</h3>
           <p className="text-[var(--color-subtle)] text-sm">
@@ -55,7 +61,7 @@ export default function Login() {
           </p>
         </motion.div>
 
-        {/* OAuth */}
+        {/* Google OAuth */}
         <motion.div variants={staggerItem} className="flex flex-col gap-2 mb-6">
           <Button
             variant="ghost"
@@ -66,31 +72,19 @@ export default function Login() {
             <GoogleIcon />
             Continue with Google
           </Button>
-          <Button
-            variant="ghost"
-            loading={loading.github}
-            onClick={() => attempt('github', loginGithub)}
-            className="w-full gap-3"
-          >
-            <Github size={15} />
-            Continue with GitHub
-          </Button>
         </motion.div>
 
         {/* Divider */}
         <motion.div variants={staggerItem}
-          className="flex items-center gap-3 mb-6"
-        >
+          className="flex items-center gap-3 mb-6">
           <div className="divider" />
           <span className="text-xs text-[var(--color-muted)] font-mono
                            whitespace-nowrap">or email</span>
           <div className="divider" />
         </motion.div>
 
-        {/* Form */}
-        <motion.div variants={staggerItem}
-          className="flex flex-col gap-4"
-        >
+        {/* Email form */}
+        <motion.div variants={staggerItem} className="flex flex-col gap-4">
           <Input
             label="Email"
             type="email"
@@ -109,32 +103,28 @@ export default function Login() {
           />
 
           {error && (
-            <motion.p {...slideUp} className="text-xs text-red-400 font-mono">
+            <motion.p {...slideUp}
+              className="text-xs text-red-400 font-mono">
               {error}
             </motion.p>
           )}
 
           <Button
             loading={loading.email}
-            onClick={() =>
-              attempt('email', () => loginEmail(form))
-            }
+            onClick={() => attempt('email', () => loginEmail(form))}
             className="w-full mt-1"
           >
             Sign in
           </Button>
         </motion.div>
 
-        {/* Footer links */}
         <motion.div variants={staggerItem}
-          className="mt-8 text-center flex flex-col gap-2"
-        >
+          className="mt-8 text-center">
           <p className="text-xs text-[var(--color-subtle)]">
             No account?{' '}
             <Link to="/auth/register"
               className="text-[var(--color-secondary)]
-                         hover:text-foreground transition-colors"
-            >
+                         hover:text-foreground transition-colors">
               Sign up free
             </Link>
           </p>

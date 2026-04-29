@@ -402,3 +402,26 @@ body.cmd-open { overflow: hidden; }
   .no-print { display: none !important; }
   body { background: white; color: black; }
 }
+
+/* ── Search page specific fixes ──────────────────────────────────── */
+.search-page-input {
+  position: relative;
+  z-index: 1;
+}
+
+/* Ensure game card text never overlaps cover */
+.game-card-info {
+  position: relative;
+  z-index: 0;
+  margin-top: 6px;
+}
+
+/* Fix truncation on game names in grid */
+.game-grid-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  word-break: break-word;
+  hyphens: auto;
+}

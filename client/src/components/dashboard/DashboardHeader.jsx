@@ -1,4 +1,4 @@
-import { useRef }        from 'react';
+import { useEffect }     from 'react';
 import { useNavigate }   from 'react-router-dom';
 import { motion }        from 'framer-motion';
 import { Search }        from 'lucide-react';
@@ -16,10 +16,16 @@ const greeting = () => {
 };
 
 export const DashboardHeader = () => {
-  const { user }     = useAuthStore();
-  const { data }     = useUserStats();
-  const navigate     = useNavigate();
-  const inputRef     = useRef(null);
+  const { user, firebaseUser } = useAuthStore();
+  const { data }               = useUserStats();
+  const navigate               = useNavigate();
+
+  // Get the best available name
+  const displayName =
+    user?.username                                    // MongoDB username
+    ?? firebaseUser?.displayName                      // Google display name
+    ?? firebaseUser?.email?.split('@')[0]             // email prefix
+    ?? 'Player';
 
   const totals = data?.totals;
 
@@ -34,29 +40,22 @@ export const DashboardHeader = () => {
       <div>
         <motion.p variants={staggerItem}
           className="text-[var(--color-subtle)] text-xs font-mono
-                     uppercase tracking-widest mb-2"
-        >
+                     uppercase tracking-widest mb-2">
           {greeting()}
         </motion.p>
-
         <motion.h2 variants={staggerItem} className="text-foreground">
-          {user?.username ?? 'Player'}
+          {displayName}
         </motion.h2>
-
         {totals && (
           <motion.div variants={staggerItem}
-            className="flex items-center gap-4 mt-2 flex-wrap"
-          >
+            className="flex items-center gap-4 mt-2 flex-wrap">
             {[
-              { v: totals.totalGames,     l: 'games' },
-              { v: formatHours(totals.totalHours), l: 'logged' },
-              { v: `${totals.completionRate}%`,    l: 'complete' },
+              { v: totals.totalGames,                    l: 'games' },
+              { v: formatHours(totals.totalHours),       l: 'logged' },
+              { v: `${totals.completionRate ?? 0}%`,     l: 'complete' },
             ].map(({ v, l }) => (
-              <span key={l}
-                className="text-sm font-mono text-[var(--color-subtle)]"
-              >
-                <span className="text-[var(--color-secondary)]">{v}</span>
-                {' '}{l}
+              <span key={l} className="text-sm font-mono text-[var(--color-subtle)]">
+                <span className="text-[var(--color-secondary)]">{v}</span> {l}
               </span>
             ))}
           </motion.div>
@@ -67,10 +66,8 @@ export const DashboardHeader = () => {
       <motion.div variants={staggerItem} className="relative max-w-xs w-full">
         <Search size={14}
           className="absolute left-3 top-1/2 -translate-y-1/2
-                     text-[var(--color-muted)] pointer-events-none"
-        />
+                     text-[var(--color-muted)] pointer-events-none" />
         <input
-          ref={inputRef}
           placeholder="Quick search…"
           onKeyDown={(e) => {
             if (e.key === 'Enter' && e.target.value.trim()) {

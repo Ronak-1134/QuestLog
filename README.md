@@ -1,281 +1,290 @@
-<div align="center">
-  <h1>QuestLog</h1>
-  <p>
-    <strong>Track your games. Know your time.</strong>
-  </p>
-  <p>
-    A minimalist, data-driven gaming platform for tracking completion times,
-    syncing Steam libraries, and visualizing playtime data.
-  </p>
-  <p>
-    <img src="https://img.shields.io/badge/React-18-black?style=flat-square" />
-    <img src="https://img.shields.io/badge/Node.js-20-black?style=flat-square" />
-    <img src="https://img.shields.io/badge/MongoDB-7-black?style=flat-square" />
-    <img src="https://img.shields.io/badge/Redis-7-black?style=flat-square" />
-    <img src="https://img.shields.io/badge/license-MIT-black?style=flat-square" />
-  </p>
-</div>
+# QuestLog 🎮
+
+> **Track your games. Know your time.**
+
+A minimalist, data-driven gaming platform for tracking completion times, syncing Steam libraries, tracking missions, and visualizing playtime data. Built with a premium Apple × Linear × Vercel design sensibility.
+
+[![Made with React](https://img.shields.io/badge/React-18-black?style=flat-square&logo=react)](https://react.dev)
+[![Node.js](https://img.shields.io/badge/Node.js-20-black?style=flat-square&logo=node.js)](https://nodejs.org)
+[![MongoDB](https://img.shields.io/badge/MongoDB-7-black?style=flat-square&logo=mongodb)](https://mongodb.com)
+[![Firebase](https://img.shields.io/badge/Firebase-Auth-black?style=flat-square&logo=firebase)](https://firebase.google.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-black?style=flat-square)](LICENSE)
 
 ---
 
-## Overview
-
-QuestLog is a full-stack SaaS platform inspired by HowLongToBeat, built with
-a premium Apple × Linear × Vercel design sensibility. Users submit completion
-times, browse community aggregates, sync their Steam library, and track their
-gaming backlog — all inside a zero-clutter, typography-driven interface.
-
-## Tech Stack
-
-| Layer      | Technology                                  |
-| ---------- | ------------------------------------------- |
-| Frontend   | React 18, Vite, Tailwind CSS, Framer Motion |
-| Backend    | Node.js 20, Express.js                      |
-| Database   | MongoDB 7 (Mongoose)                        |
-| Cache      | Redis 7 (ioredis)                           |
-| Auth       | Firebase Auth + Admin SDK                   |
-| Real-time  | Socket.io                                   |
-| Game data  | IGDB API (Twitch OAuth)                     |
-| Steam data | Steam Web API                               |
-| Charts     | Recharts                                    |
-| Deployment | Docker + Nginx                              |
-
-## Architecture
+## 📸 Preview
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                  React Client (Vite)                     │
-│   Zustand ──► Pages ──► Components ──► React Query      │
-└────────────────────────┬────────────────────────────────┘
-                         │ HTTPS + WS
-┌────────────────────────▼────────────────────────────────┐
-│                  Express API Server                      │
-│  Routes ──► Middleware ──► Controllers ──► Services     │
-│               │                                          │
-│        ┌──────┴──────┐                                  │
-│        │    Redis     │  Cache-aside, TTL per endpoint   │
-│        └─────────────┘                                  │
-└──────┬──────────────────────────┬───────────────────────┘
-       │                          │
-┌──────▼──────┐          ┌────────▼────────┐
-│   MongoDB   │          │  External APIs   │
-│  Mongoose   │          │  IGDB + Steam    │
-└─────────────┘          └─────────────────┘
-       │
-┌──────▼──────┐
-│  Socket.io  │  Live stat push after playtime submission
-└─────────────┘
+Landing Page → Login → Dashboard (Bento Grid) → Search Games → Game Detail → Missions
 ```
 
-## Features
+- **Ultra-minimalist** black & white design
+- **Bento Grid** dashboard with live stats
+- **Mission Tracker** with pre-loaded missions for GTA V, Elden Ring, RDR2, Witcher 3, Cyberpunk 2077, God of War
+- **Completion time tracking** — community-sourced Main Story / Sides / Completionist data
+- **Steam library sync** via Steam Web API
+- **Real-time updates** via Socket.io
 
-**Core**
+---
 
-- Community-sourced playtime tracking (main story / sides / completionist)
-- Outlier-filtered stat aggregation (mean, median, p25, p75, min, max)
-- Steam library sync with IGDB fuzzy matching
-- Debounced live search — 500K+ games via IGDB
-- Bento grid dashboard with real-time updates
+## 🛠️ Tech Stack
 
-**Advanced**
+| Layer | Technology |
+|---|---|
+| Frontend | React 18, Vite, Tailwind CSS, Framer Motion |
+| Backend | Node.js 20, Express.js |
+| Database | MongoDB 7 (Mongoose) |
+| Cache | Redis 7 (ioredis) |
+| Auth | Firebase Auth + Admin SDK |
+| Real-time | Socket.io |
+| Game Data | IGDB API (Twitch OAuth) |
+| Steam Data | Steam Web API |
+| Charts | Recharts |
+| Deployment | Render (backend) + Vercel (frontend) |
 
-- Redis cache-aside on all IGDB + IGDB match calls (7-day Steam match cache)
-- AI playtime predictor — genre-weighted heuristic with confidence score
-- Pile of Shame calculator — unplayed games × estimated hours × years-at-pace
-- Socket.io stat push — game page updates live after any user submission
-- Optimistic UI updates with automatic rollback on error
+---
 
-**Performance**
+## ⚡ Features
 
-- Code-split per route + manual vendor chunks (React, Motion, Charts, Firebase)
-- `LazyImage` with IntersectionObserver — 300px prefetch margin
-- Virtual scroll for large library pages
-- `⌘K` command palette with keyboard navigation
-- Scroll progress indicator, page transitions, skeleton states
+### Core
+- 🎯 **Completion time tracking** — Submit & view Main Story / Main + Sides / Completionist times
+- 📊 **Community stats** — Mean, median, min, max with distribution visualization
+- 🔍 **Live debounced search** — 500K+ games via IGDB API
+- 🎮 **Mission Tracker** — Pre-loaded missions for popular games, checkable per user
+- 🗂️ **Library management** — Track status: Playing / Completed / Backlog / Dropped
+- 👤 **User profile** — View all games grouped by status with stats
+- ⚡ **Steam Sync** — Import your entire Steam library in seconds
+- 🏆 **Pile of Shame** — Unplayed games with estimated completion time cost
+- 🔴 **Real-time updates** — Socket.io stat push after submissions
+- ⌘K **Command palette** — Quick search from anywhere
+- 📱 **Responsive** — Works on all screen sizes
 
-## Quick Start
+---
+
+## 🚀 Local Development
 
 ### Prerequisites
 
-- Node.js 20+
-- Docker + Docker Compose
-- IGDB (Twitch) credentials — [get them here](https://dev.twitch.tv/console/apps)
-- Firebase project — [console.firebase.google.com](https://console.firebase.google.com)
-- Steam API key (optional) — [steamcommunity.com/dev/apikey](https://steamcommunity.com/dev/apikey)
+- Node.js v20+
+- Docker Desktop (for MongoDB + Redis)
+- Firebase project
+- IGDB (Twitch) API credentials
+- Steam API key *(optional)*
 
 ### 1. Clone
 
 ```bash
-git clone https://github.com/yourorg/questlog.git
+git clone https://github.com/yourusername/questlog.git
 cd questlog
 ```
 
-### 2. Infrastructure
+### 2. Start databases
 
 ```bash
-docker-compose up -d mongo redis
+docker-compose up -d
 ```
 
-### 3. Server
+### 3. Setup server
 
 ```bash
 cd server
-cp .env.example .env       # fill required values
+cp .env.example .env
+# Fill in your credentials (see Environment Variables below)
 npm install
-npm run dev                # http://localhost:5000
+npm run dev
+# Server runs on http://localhost:5000
 ```
 
-### 4. Client
+### 4. Setup client
 
 ```bash
 cd client
-cp .env.example .env       # fill Firebase config
+cp .env.example .env
+# Fill in your Firebase credentials
 npm install
-npm run dev                # http://localhost:5173
+npm run dev
+# Client runs on http://localhost:5173
 ```
 
-## Environment Variables
+### 5. Open the app
+
+Visit [http://localhost:5173](http://localhost:5173)
+
+---
+
+## 🔑 Environment Variables
 
 ### Server (`server/.env`)
 
-| Variable                | Required | Description                                       |
-| ----------------------- | -------- | ------------------------------------------------- |
-| `MONGODB_URI`           | ✓        | MongoDB connection string                         |
-| `IGDB_CLIENT_ID`        | ✓        | Twitch app client ID                              |
-| `IGDB_CLIENT_SECRET`    | ✓        | Twitch app client secret                          |
-| `FIREBASE_PROJECT_ID`   | ✓        | Firebase project ID                               |
-| `FIREBASE_PRIVATE_KEY`  | ✓        | Firebase service account private key              |
-| `FIREBASE_CLIENT_EMAIL` | ✓        | Firebase service account email                    |
-| `STEAM_API_KEY`         | —        | Steam Web API key (disables Steam sync if absent) |
-| `REDIS_HOST`            | —        | Redis host (defaults to localhost)                |
-| `REDIS_PASSWORD`        | —        | Redis auth password                               |
-| `CLIENT_URL`            | —        | CORS origin (default: http://localhost:5173)      |
+```env
+PORT=5000
+NODE_ENV=development
+
+# MongoDB
+MONGODB_URI=mongodb://localhost:27017/questlog
+
+# Redis
+REDIS_HOST=localhost
+REDIS_PORT=6379
+REDIS_PASSWORD=
+
+# IGDB — https://dev.twitch.tv/console/apps
+IGDB_CLIENT_ID=your_twitch_client_id
+IGDB_CLIENT_SECRET=your_twitch_client_secret
+
+# Steam — https://steamcommunity.com/dev/apikey
+STEAM_API_KEY=your_steam_api_key
+
+# Firebase Admin — Firebase Console → Project Settings → Service Accounts
+FIREBASE_PROJECT_ID=your_project_id
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxx@project.iam.gserviceaccount.com
+
+# CORS
+CLIENT_URL=http://localhost:5173
+```
 
 ### Client (`client/.env`)
 
-| Variable                    | Required | Description          |
-| --------------------------- | -------- | -------------------- |
-| `VITE_FIREBASE_API_KEY`     | ✓        | Firebase web API key |
-| `VITE_FIREBASE_AUTH_DOMAIN` | ✓        | Firebase auth domain |
-| `VITE_FIREBASE_PROJECT_ID`  | ✓        | Firebase project ID  |
-| `VITE_FIREBASE_APP_ID`      | ✓        | Firebase app ID      |
-| `VITE_API_URL`              | ✓        | Backend API base URL |
+```env
+# Firebase — Firebase Console → Project Settings → Your apps → Web app
+VITE_FIREBASE_API_KEY=AIzaSy...
+VITE_FIREBASE_AUTH_DOMAIN=yourproject.firebaseapp.com
+VITE_FIREBASE_PROJECT_ID=yourproject
+VITE_FIREBASE_STORAGE_BUCKET=yourproject.appspot.com
+VITE_FIREBASE_MESSAGING_SENDER_ID=123456789
+VITE_FIREBASE_APP_ID=1:123456789:web:abc123
 
-## API Reference
+# API
+VITE_API_URL=http://localhost:5000/api
+```
+
+---
+
+## 🌐 Deployment
+
+### Backend → Render
+
+1. Go to [render.com](https://render.com) and sign up
+2. Click **New → Web Service**
+3. Connect your GitHub repo
+4. Configure:
+   - **Root Directory:** `server`
+   - **Build Command:** `npm install`
+   - **Start Command:** `node src/server.js`
+   - **Environment:** Node
+5. Add all environment variables from `server/.env`
+6. For MongoDB: use [MongoDB Atlas](https://cloud.mongodb.com) free tier — replace `MONGODB_URI` with Atlas connection string
+7. For Redis: use [Upstash Redis](https://upstash.com) free tier — replace `REDIS_HOST`, `REDIS_PORT`, `REDIS_PASSWORD`
+8. Click **Deploy**
+
+Your server will be live at: `https://your-app-name.onrender.com`
+
+### Frontend → Vercel
+
+1. Go to [vercel.com](https://vercel.com) and sign up
+2. Click **New Project** → Import your GitHub repo
+3. Configure:
+   - **Root Directory:** `client`
+   - **Framework Preset:** Vite
+   - **Build Command:** `npm run build`
+   - **Output Directory:** `dist`
+4. Add environment variables:
+   - All `VITE_FIREBASE_*` variables from `client/.env`
+   - `VITE_API_URL` = `https://your-render-app.onrender.com/api`
+5. Click **Deploy**
+
+Your app will be live at: `https://your-app-name.vercel.app`
+
+### Post-Deployment Checklist
+
+After deploying, update these:
+
+```
+Firebase Console → Authentication → Settings → Authorized domains
+→ Add your Vercel domain: your-app-name.vercel.app
+
+Render → Environment Variables
+→ Update CLIENT_URL=https://your-app-name.vercel.app
+```
+
+---
+
+## 🗺️ API Reference
 
 ```
 AUTH
-  POST  /api/auth/register      Sync Firebase user → MongoDB (idempotent)
-  GET   /api/auth/me            Get current user profile
+  POST  /api/auth/register          Sync Firebase user → MongoDB
+  GET   /api/auth/me                Get current user profile
 
 GAMES
-  GET   /api/games/search       ?q= — IGDB search (Redis cached 1h)
-  GET   /api/games/trending     Top-rated recent games (cached 30min)
-  GET   /api/games/slug/:slug   Game detail by slug (cached 24h)
-  GET   /api/games/:id          Game detail by IGDB id (cached 24h)
-  GET   /api/games/:id/similar  Similar games (cached 12h)
-  GET   /api/games/:id/stats    Aggregated playtime stats (cached 10min)
-  POST  /api/games/:id/playtime Submit completion time [auth]
+  GET   /api/games/search           ?q= — IGDB search
+  GET   /api/games/trending         Trending games
+  GET   /api/games/slug/:slug       Game detail by slug
+  GET   /api/games/:id              Game detail by IGDB id
+  GET   /api/games/:id/similar      Similar games
+  GET   /api/games/:id/stats        Aggregated playtime stats
+  POST  /api/games/:id/playtime     Submit completion time
 
 USERS
-  GET   /api/users/:id/library  Paginated game library [auth]
-  POST  /api/users/library      Add game to library [auth]
-  GET   /api/users/:id/backlog  Backlog list [auth]
-  GET   /api/users/:id/stats    Personal analytics [auth]
-  PATCH /api/users/:id/game/:gameId  Update game entry [auth]
+  GET   /api/users/:id/library      User game library
+  POST  /api/users/library          Add game to library
+  GET   /api/users/:id/backlog      Backlog list
+  GET   /api/users/:id/stats        Personal stats
+  PATCH /api/users/:id/game/:gameId Update game status/progress
+
+MISSIONS
+  GET   /api/missions/:slug         Get missions + user progress
+  POST  /api/missions/:slug/toggle  Toggle single mission complete
+  POST  /api/missions/:slug/bulk    Mark multiple missions at once
 
 STEAM
-  POST  /api/steam/sync         Import Steam library [auth, 3/hr limit]
-  GET   /api/steam/status       Last sync metadata [auth]
+  POST  /api/steam/sync             Import Steam library
+  GET   /api/steam/status           Last sync metadata
 
 STATS
-  GET   /api/stats/global       Platform-wide stats (cached 5min)
-  GET   /api/stats/breakdown    Personal playtime breakdown [auth]
-  GET   /api/stats/shame        Pile of Shame data [auth]
-  GET   /api/stats/predict/:id  AI playtime prediction (cached 24h)
+  GET   /api/stats/global           Platform-wide stats
+  GET   /api/stats/breakdown        Personal playtime breakdown
+  GET   /api/stats/shame            Pile of Shame data
+  GET   /api/stats/predict/:id      AI playtime prediction
 ```
 
-## Key Design Decisions
+---
 
-**Cache strategy** — Redis cache-aside. Each endpoint has a tuned TTL:
-IGDB game detail 24h, search results 1h, trending 30min, playtime stats
-10min with immediate bust on any new submission.
+## 🎮 Supported Games (Mission Tracker)
 
-**Playtime aggregation** — Raw submissions are outlier-filtered with z-score
-(threshold 2.5σ, minimum 3 entries). Final stats include mean, median,
-p25, p75, min, max per category. Recalculation is async — response is
-never blocked by stat computation.
+| Game | Missions | Chapters |
+|---|---|---|
+| Grand Theft Auto V | 38+ main + 12 side | 5 chapters + endings |
+| Elden Ring | 13 main bosses + 13 side | 7 regions |
+| Red Dead Redemption 2 | 32 missions | Prologue + 6 chapters + epilogue |
+| The Witcher 3: Wild Hunt | 19 main + 5 side | 5 acts |
+| Cyberpunk 2077 | 20 main + 5 side | 3 acts |
+| God of War | 11 main + 6 favors | 2 chapters |
 
-**Steam matching** — Fuzzy name match against IGDB search. Priority:
-exact normalized match → substring → first result. Each `appId` → IGDB
-match is cached for 7 days to minimize API calls on re-sync.
+---
 
-**Auth** — Firebase handles all credential operations. The server only
-receives and verifies ID tokens via Firebase Admin SDK. MongoDB user
-documents are created via an idempotent upsert on first login, so OAuth
-and email sign-up share the same registration path.
+## 🤝 Contributing
 
-**Real-time** — Each authenticated user joins a Socket.io room
-(`user:{uid}`). After playtime recalculation, a `game:{igdbId}:stats`
-event is emitted globally. React Query cache is updated in-place via the
-`useLiveStats` hook — no full refetch triggered.
+1. Fork the repository
+2. Create a feature branch: `git checkout -b feature/amazing-feature`
+3. Commit your changes: `git commit -m 'Add amazing feature'`
+4. Push to the branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
 
-**Optimistic updates** — Library mutations apply immediately via a Zustand
-`optimisticUpdates` map merged into React Query's `select`. On error, the
-map entry is deleted, restoring the previous state, and an error toast fires.
+---
 
-## Production Deployment
-
-```bash
-# Build + start all services
-docker-compose up -d --build
-
-# View logs
-docker-compose logs -f server
-docker-compose logs -f client
-
-# Health check
-curl http://localhost:5000/health
-```
-
-## Project Structure
-
-```
-questlog/
-├── client/                    React + Vite frontend
-│   ├── src/
-│   │   ├── components/        UI components
-│   │   │   ├── auth/          AuthGuard
-│   │   │   ├── charts/        Recharts wrappers
-│   │   │   ├── dashboard/     Bento grid cards
-│   │   │   ├── game/          GameCard, GameHero, PlaytimePanel
-│   │   │   ├── layout/        Shell, Navbar, Container
-│   │   │   └── ui/            Button, Input, Card, Toast, CommandPalette
-│   │   ├── hooks/             Data + UI hooks
-│   │   ├── lib/               axios, firebase, socket, seo, motion, utils
-│   │   ├── pages/             Route-level components
-│   │   ├── providers/         AuthProvider, SocketProvider
-│   │   ├── services/          auth.service
-│   │   ├── store/             Zustand: auth, dashboard
-│   │   └── styles/            globals.css
-│   ├── public/                Static assets, robots.txt, webmanifest
-│   └── Dockerfile
-│
-├── server/                    Node + Express backend
-│   ├── src/
-│   │   ├── config/            db, redis, firebase, igdb, events, env
-│   │   ├── controllers/       auth, game, user, steam, stats
-│   │   ├── middleware/        auth, cache, rateLimit, error
-│   │   ├── models/            User, Game, UserGame, PlaytimeEntry
-│   │   ├── routes/            auth, game, user, steam, stats
-│   │   ├── services/          igdb, steam, stats
-│   │   └── utils/             ApiError, ApiResponse, catchAsync, logger
-│   └── Dockerfile
-│
-├── docker-compose.yml
-└── README.md
-```
-
-## License
+## 📄 License
 
 MIT © QuestLog
+
+---
+
+<div align="center">
+  <p>Built with obsession.</p>
+  <p>
+    <a href="https://questlog.gg">Live Demo</a> ·
+    <a href="https://github.com/Ronak-1134/QuestLog/issues">Report Bug</a> ·
+    <a href="https://github.com/Ronak-1134/QuestLog/issues">Request Feature</a>
+  </p>
+</div>

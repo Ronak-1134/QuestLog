@@ -1,12 +1,15 @@
 import { io } from 'socket.io-client';
 
-const SERVER = import.meta.env.VITE_API_URL?.replace('/api', '') ?? 'http://localhost:5000';
+// In production use the Render server, locally use localhost
+const SERVER = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace('/api', '')
+  : 'http://localhost:5000';
 
 const socket = io(SERVER, {
   transports:           ['websocket', 'polling'],
-  autoConnect:          false,      // ← never auto-connect
+  autoConnect:          false,
   reconnection:         true,
-  reconnectionAttempts: 3,          // ← only try 3 times then stop
+  reconnectionAttempts: 3,
   reconnectionDelay:    3000,
   timeout:              5000,
 });
@@ -14,7 +17,7 @@ const socket = io(SERVER, {
 socket.on('connect',       () => console.debug('[WS] connected'));
 socket.on('disconnect',    () => console.debug('[WS] disconnected'));
 socket.on('connect_error', () => {
-  // silent — server may not be running yet
+  // silent in production
 });
 
 export const connectSocket = (uid) => {

@@ -5,9 +5,11 @@ import morgan  from 'morgan';
 
 const app = express();
 
-app.use(helmet());
 app.use(cors({
-  origin:      process.env.CLIENT_URL || 'http://localhost:5173',
+  origin: [
+    process.env.CLIENT_URL,
+    'http://localhost:5173'
+  ].filter(Boolean), // .filter(Boolean) removes undefined values if CLIENT_URL isn't set yet
   credentials: true,
 }));
 app.use(express.json({ limit: '10kb' }));

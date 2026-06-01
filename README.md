@@ -251,19 +251,6 @@ STATS
 
 ---
 
-## 🎮 Supported Games (Mission Tracker)
-
-| Game | Missions | Chapters |
-|---|---|---|
-| Grand Theft Auto V | 38+ main + 12 side | 5 chapters + endings |
-| Elden Ring | 13 main bosses + 13 side | 7 regions |
-| Red Dead Redemption 2 | 32 missions | Prologue + 6 chapters + epilogue |
-| The Witcher 3: Wild Hunt | 19 main + 5 side | 5 acts |
-| Cyberpunk 2077 | 20 main + 5 side | 3 acts |
-| God of War | 11 main + 6 favors | 2 chapters |
-
----
-
 ## 🤝 Contributing
 
 1. Fork the repository
@@ -283,7 +270,7 @@ MIT © QuestLog
 <div align="center">
   <p>Built with obsession.</p>
   <p>
-    <a href="https://questlog.gg">Live Demo</a> ·
+    <a href="https://quest-log-eta.vercel.app">Live Demo</a> ·
     <a href="https://github.com/Ronak-1134/QuestLog/issues">Report Bug</a> ·
     <a href="https://github.com/Ronak-1134/QuestLog/issues">Request Feature</a>
   </p>
